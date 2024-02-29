@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="pl">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link href='https://fonts.googleapis.com/css?family=Itim&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+	<style>
+		body,
+		html {
+			background-image: url("./img/background.jpg");
+			height: 100%;
+			margin: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		#spot_diff_container {
+			margin: 40px;
+		}
+
+		#spot_diff_image {
+			background: url('./img/parviz_1_1.jpg');
+			float: left;
+		}
+
+		#spot_diff_image2 {
+			background: url('./img/parviz_1_2.jpg');
+			float: left;
+		}
+
+		.spot_diff_clear {
+			clear: both;
+			width: 100%;
+		}
+
+		#spot_diff_message {
+			border: 1px solid #000;
+			color: white;
+			font-size: 30px;
+			text-align: center;
+			font-family: 'Roboto Slab';
+		}
+	</style>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script>
+
+		//радиус круга 
+		var circle_radius = 20;
+		//цвет круга
+		var circle_color = "#FF0000";
+
+		//размер изображений
+		var picture_width = 612;
+		var picture_height = 816;
+		//корды на точки
+		var points_table = [
+			[297, 662, 0],
+			[419, 583, 0],
+			[298, 518, 0],
+			[141, 420, 0],
+			[269, 298, 0],
+			[470, 316, 0]
+		];
+
+		var s_find_diff = "Кол-во отличий: ";
+		var s_congrat = "Поздравляю, Парвиз!<br />Приступай к следующей загадке.";
+
+		var found = 0;
+
+		function isPointInCircle(x, y, center_x, center_y, radius) {
+			var dx = x - center_x, dy = y - center_y;
+			var distsq = dx * dx + dy * dy;
+			var rsq = radius * radius;
+
+			return distsq < rsq;
+		}
+
+		$(document).ready(function () {
+
+			var ctx = $("#spot_diff_image")[0].getContext("2d");
+			$('#spot_diff_image').attr({ width: picture_width, height: picture_height });
+			$('#spot_diff_image2').css({ width: picture_width, height: picture_height });
+			$("#spot_diff_container").css("width", picture_width * 2);
+			$("#spot_diff_message").html(s_find_diff + (points_table.length - found));
+
+			$("#spot_diff_message").click(function () {
+				if (found == points_table.length) {
+					ctx.clearRect(0, 0, picture_width, picture_height);
+					found = 0;
+					$("#spot_diff_message").html(s_find_diff + (points_table.length - found));
+
+					for (var i = 0; i < points_table.length; i++)
+						points_table[i][2] = 0;
+				}
+			});
+
+			$("#spot_diff_image,#spot_diff_image2").click(function (e) {
+				//вычитаем положение изображений с отношением экрана
+				var x = e.pageX - $(this).offset().left;
+				var y = e.pageY - $(this).offset().top;
+				for (var i = 0; i < points_table.length; i++) {
+					if (isPointInCircle(x, y, points_table[i][0], points_table[i][1], circle_radius) && (points_table[i][2] == 0)) //Correct!
+					{
+						++found;
+
+						//рисуем круг
+						ctx.beginPath();
+						ctx.strokeStyle = circle_color;
+						ctx.lineWidth = 3;
+						ctx.arc(points_table[i][0], points_table[i][1], circle_radius, 0, Math.PI * 2, true);
+						ctx.closePath();
+						ctx.stroke();
+
+						points_table[i][2] = 1;
+						$("#spot_diff_message").html(s_find_diff + (points_table.length - found));
+						if (found == points_table.length) {
+							$("#spot_diff_message").html(s_congrat);
+						}
+					} //if(isPointInCircle(...
+				}
+			});
+		});
+		// Функция для воспроизведения музыки
+		function playMusic() {
+			var audio = document.getElementById("myAudio");
+			audio.play();
+
+			// Удаление обработчика события после первого клика
+			document.removeEventListener("click", playMusic);
+		}
+
+		// Добавляем обработчик события клика
+		document.addEventListener("click", playMusic);
+	</script>
+</head>
+
+<body>
+	<audio id="myAudio" autoplay>
+		<source src="test.mp3" type="audio/mpeg">
+		Your browser does not support the audio element.
+	</audio>
+	<div id="spot_diff_container">
+		<canvas id="spot_diff_image"></canvas>
+		<div id="spot_diff_image2"></div>
+		<div class="spot_diff_clear"></div>
+		<div id="spot_diff_message"></div>
+	</div>
+
+</body>
+
+</html>

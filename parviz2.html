@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Смешная игра</title>
+	<title>Document</title>
 	<link href='https://fonts.googleapis.com/css?family=Itim&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 	<style>
 		body,
@@ -21,12 +21,12 @@
 		}
 
 		#spot_diff_image {
-			background: url('./src/img/parviz_1_1.jpg');
+			background: url('./src/img/parviz_2_1.jpg');
 			float: left;
 		}
 
 		#spot_diff_image2 {
-			background: url('./src/img/parviz_1_2.jpg');
+			background: url('./src/img/parviz_2_2.jpg');
 			float: left;
 		}
 
@@ -56,16 +56,15 @@
 		var picture_height = 816;
 		//корды на точки
 		var points_table = [
-			[297, 662, 0],
-			// [419, 583, 0],
-			// [298, 518, 0],
-			// [141, 420, 0],
-			// [269, 298, 0],
-			// [470, 316, 0]
+			[166, 500, 0],
+			[216, 496, 0],
+			[421, 500, 0],
+			[476, 374, 0],
+			[554, 203, 0]
 		];
 
 		var s_find_diff = "Кол-во отличий: ";
-		var s_congrat = "Поздравляю, Парвиз!<br /> <p><a href=parviz2.html>НАЖИМАЙ</a></p>";
+		var s_congrat = "Поздравляю, Парвиз!<br />Приступай к следующей загадке.";
 
 		var found = 0;
 
@@ -112,7 +111,7 @@
 						ctx.arc(points_table[i][0], points_table[i][1], circle_radius, 0, Math.PI * 2, true);
 						ctx.closePath();
 						ctx.stroke();
-						playSound("./src/audio/pick.mp3")
+						playSound("./src/audio/pick2.mp3")
 						points_table[i][2] = 1;
 						$("#spot_diff_message").html(s_find_diff + (points_table.length - found));
 						if (found == points_table.length) {
@@ -145,10 +144,6 @@
 </head>
 
 <body>
-	<audio id="myAudio" autoplay>
-		<source src="./src/audio/welcome.mp3" type="audio/mpeg">
-		Your browser does not support the audio element.
-	</audio>
 	<div id="spot_diff_container">
 		<canvas id="spot_diff_image"></canvas>
 		<div id="spot_diff_image2"></div>
